@@ -1,18 +1,34 @@
 const fs = require('fs');
 
-const config = {
-  location: {
-    inputdir: "./dev",
-    outputdir: "./public"
-  }
-};
+const pageLocation = "./dev/pages"
+const partialLocation = "./dev/_partials"
 
-//Todo: read file
-	//attach header
-	//attach content
-	//attach footer
+//Get pages
+const pages = fs.readdirSync(pageLocation)
 
-const pages = fs.readdirSync(`${config.location.inputdir}/pages`)
-				.map( page => page )
-console.log(pages)
+//Loop all pages
+pages.forEach(function(page) {
+	//get and render contents
+	const content = fs.readFileSync(`${pageLocation}/${page}`).toString()
+	const renderedContent = renderPage(content)
 
+	//save to new location
+	fs.writeFileSync(`./public/${page}`, renderedContent)
+})
+
+function renderPage(content) {
+	let newContent = content
+	const matches = content.match(/@ssg-import\((.*?)\)/g)
+	if(matches == null)
+		return content
+
+	matches.forEach(function(match){
+		const partialFile = match.replace("@ssg-import(", "").replace(")",".html")
+		const partialContent = fs.readFileSync(`${partialLocation}/${partialFile}`)
+								.toString()
+
+		newContent = newContent.replace(match, partialContent)
+	})
+
+	return newContent
+}
