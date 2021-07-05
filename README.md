@@ -10,13 +10,16 @@ Import partial code
 ```
 
 ## Examples
-```
+
 Put reuseable/partial code in _partials
+```
 -> dev/_partials/header.html
 or
 -> dev/_partials/footer.html
+```
 
-//To use in HTML files
+To use in HTML files
+```
 -> dev/pages/index.html
 @ssg-import(header)
 <h1>index page</h1>
@@ -28,9 +31,19 @@ or
 Write your HTML files in `/dev/pages`  
 Use "import feature" above where you can reuse code in `dev/_partials`  
 Run `node src/index.js`  
-Your files are in `/public` folder
+Your production files are in `/public` folder
 
+## Todo / Plan
+- [ ]Prevent string "@ssg-improt()"  rendered as code.	
+- [ ]Meta and social share info
+- [ ]work with markdown
+- [X]partial
+- [ ]template 
 
-
+## Beta (later)
+- Minify everything
+- Live server
+- watch changes
+- SaaS support
 
 
