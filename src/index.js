@@ -31,7 +31,7 @@ function renderPage(content) {
 	const layoutLabel = content.match(patterns.layout)
 	
 	if(layoutLabel != null) {
-		content = content.replace(patterns.layoutIncludeCodeTag, renderLayout)
+		content = content.replace(patterns.layoutIncludeCodeTag, renderLayout('abc'))
 	}
 
 	//----1. RENDER _IMPORT PAGE----
@@ -46,7 +46,9 @@ function renderPage(content) {
 	return content
 }
 
-function renderLayout(text) {
+function renderLayout(text, text2) {
+	console.log(text)
+	console.log(text2)
 	//If in <code> tag, return plain
 	if(text.includes('<code>'))
 		return text
