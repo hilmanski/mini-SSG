@@ -6,9 +6,11 @@ const partialLocation = "./dev/_partials"
 //Get pages
 const pages = fs.readdirSync(pageLocation)
 
+const testImp = /@ssg-import\((.*?)\)/g
+
 const patterns = {
 	import: /@ssg-import\((.*?)\)/g,
-	importIncludeCodeTag: /(<code>(?:[^<](?!\/code))*<\/code>)|@ssg-import\((.*?)\)/gi,
+	importIncludeCodeTag: new RegExp(`(<code>(?:[^<](?!\/code))*<\/code>)|${testImp}`),
 }
 
 //Loop all pages

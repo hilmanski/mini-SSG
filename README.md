@@ -36,10 +36,11 @@ Your production files are in `/public` folder
 ## Todo / Alpha Plan
 - [X] partial
 - [X] Prevent string "@ssg-import()"  rendered as code.	
+- [ ] template 
+- [ ] slots
 - [ ] Meta and social share info
 - [ ] work with markdown
 - [ ] work with subfolders
-- [ ] template 
 - [ ] simple website to demo everything
 - [ ] Publish as package at npm
 
