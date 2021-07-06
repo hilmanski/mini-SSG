@@ -1,10 +1,21 @@
 Currently on Development
 
 # Mini SSG [Alpha]
-Simple static site generator, to prevent your write DRY HTML files.
+Simple static site generator, to prevent your write DRY HTML files.  
+Built with Nodejs  
+Inspired by Laravel Blade Template and Sergey.cool SSG
 
 ## Feature
-Import partial code
+
+You don't have to use everything or anything at all, it's all up to you
+
+1. Use layout 
+layout must be on top of the file and only one per page
+```
+@layout(base) //no need to write extension -> .html
+```
+
+2. Import partial code
 ```
 @import(fileName) //no need to write extension -> .html
 ```
@@ -21,11 +32,12 @@ or
 To use in HTML files
 ```
 -> dev/pages/index.html
-@ssg-import(header)
+@import(header)
 <h1>index page</h1>
 <p>this is index page</p>
-@ssg-import(footer)
+@import(footer)
 ```
+
 
 ## Usage
 Write your HTML files in `/dev/pages`  
@@ -35,7 +47,7 @@ Your production files are in `/public` folder
 
 ## Todo / Alpha Plan
 - [X] partial
-- [X] Prevent string "@ssg-import()"  rendered as code.	
+- [X] Prevent string "@import()"  rendered as code.	
 - [ ] template 
 - [ ] slots
 - [ ] Meta and social share info
