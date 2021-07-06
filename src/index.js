@@ -7,16 +7,18 @@ const partialDir = "./dev/_partials"
 //Get pages
 const pages = fs.readdirSync(pageDir)
 
-//Todo: can you remove "includecodeTag"? 
+//Todo: can you remove "WithcodeTag"? 
 	//can it be auto ignore whats inside code tag
 const patterns = {
 	import: /@import\((.*?)\)/g,
-	importIncludeCodeTag: /(<code>(?:[^<](?!\/code))*<\/code>)|@import\((.*?)\)/gi,
+	importWithCodeTag: /(<code>(?:[^<](?!\/code))*<\/code>)|@import\((.*?)\)/gi,
 	layout: /@layout\((.*?)\)/g,
-	layoutIncludeCodeTag: /(<code>(?:[^<](?!\/code))*<\/code>)|@layout\((.*?)\)/gi,
+	layoutWithCodeTag: /(<code>(?:[^<](?!\/code))*<\/code>)|@layout\((.*?)\)/gi,
 	attach: /@attach\((.*?)\)/g,
-	attachIncludeCodeTag: /(<code>(?:[^<](?!\/code))*<\/code>)|@attach\((.*?)\)/gi,
-	partIncludeCodeTag : /(<code>(?:[^<](?!\/code))*<\/code>)|(@part)([\S\s]*?)(@endpart)/gi,
+	attachWithCodeTag: /(<code>(?:[^<](?!\/code))*<\/code>)|@attach\((.*?)\)/gi,
+	partWithCodeTag : /(<code>(?:[^<](?!\/code))*<\/code>)|(@part)([\S\s]*?)(@endpart)/gi,
+	simplePart: /(?<=@part\()(.*),(.*)(?=\))/g,
+	simplePartWithCodeTag: /(<code>(?:[^<](?!\/code))*<\/code>)|(@part\()(.*),(.*)(\))/gi
 }
 
 //Loop all pages
@@ -43,33 +45,46 @@ function renderPage(content) {
 	//----0. RENDER LAYOUT------------
 	const layoutLabel = content.match(patterns.layout)
 	if(layoutLabel != null) {
-		content = content.replace(patterns.layoutIncludeCodeTag, renderTag.bind(this, 'layout'))
+		content = content.replace(patterns.layoutWithCodeTag, renderTag.bind(this, 'layout'))
 	}
 
+	//-------------------------------------
+	//----1. RENDER simple part/attach ----
+	const simplePartLabels = content.match(patterns.simplePart)
+	if(simplePartLabels != null) {
+		simplePartLabels.forEach(function(match){
+			content = content.replace(patterns.attachWithCodeTag, renderSimplePart.bind(this, content))
+		})
+
+		//remove simple part
+		content = content.replace(patterns.simplePartWithCodeTag, "")
+	}
+	
 	//-----------------------------------------
-	//----1. RENDER ATTACH AND SECTION PAGE----
+	//----2. RENDER ATTACH AND SECTION PAGE----
 	const attachLabels = content.match(patterns.attach)
 	if(attachLabels != null) {
 		attachLabels.forEach(function(match){
-			content = content.replace(patterns.attachIncludeCodeTag, renderLayout.bind(this, content))
+			content = content.replace(patterns.attachWithCodeTag, renderLayout.bind(this, content))
 		})
 		
 		//remove all section tags
-		content = content.replace(patterns.partIncludeCodeTag, "")
+		content = content.replace(patterns.partWithCodeTag, "")
 	}
 	
 	//--------------------------------
-	//----2. RENDER _IMPORT PAGE----
+	//----3. RENDER _IMPORT PAGE----
 	const importLabels = content.match(patterns.import)
 	if(importLabels == null)
 		return content
 	
 	importLabels.forEach(function(match){
-		content = content.replace(patterns.importIncludeCodeTag, renderTag.bind(this, 'import'))
+		content = content.replace(patterns.importWithCodeTag, renderTag.bind(this, 'import'))
 	})
 
 	return content
 }
+
 
 function renderTag(type, text) {
 	//If in <code> tag, return plain
@@ -79,6 +94,28 @@ function renderTag(type, text) {
 	const fileName = getCompleteFileName(text, type)
 	const content = _readFile(fileName)
 	return content
+}
+
+
+function renderSimplePart(content, text) {
+	//If in <code> tag, return plain
+	if(text.includes('<code>'))
+		return text
+
+	const attachName = getTagContent(text.split(',')[0])
+	
+	const patternBetweenPart = /(?<=@part\()(.*),(.*)(?=\))/g
+	const matchPart = content.match(patternBetweenPart).filter(
+							item => item.startsWith(attachName) 
+						)[0]
+	
+	//Since attach can include both simple and not simple part
+		//we need to make an exception
+	if(matchPart == undefined)
+		return text
+
+	const value = matchPart.split(',')[1].trim()
+	return value
 }
 
 function renderLayout(content, text) {
@@ -92,8 +129,9 @@ function renderLayout(content, text) {
 	const matchPart = content.match(patternBetweenPart).filter(
 						item => item.startsWith("(" + attachName) 
 					)[0]
-	console.log(matchPart)
-	// if(matchPart == undefined) return;
+
+	// console.log(matchPart)
+	if(matchPart == undefined) return text;
 
 	const partContent = matchPart.split(")")[1]
 	return partContent

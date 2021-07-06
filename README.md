@@ -49,8 +49,10 @@ Your production files are in `/public` folder
 - [X] partial
 - [X] Prevent string "@import()"  rendered as code.	
 - [X] template 
+- [ ] simple attach/part with 2nd parameter as value
 - [ ] work with markdown?
 - [ ] work with subfolders
+- [ ] Better error msg if any typo on syntax / not match
 - [ ] simple website to demo everything
 - [ ] npm command to init folder and file as base
 - [ ] Publish as package at npm
