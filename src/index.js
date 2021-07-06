@@ -16,8 +16,9 @@ const patterns = {
 	layoutWithCodeTag: /(<code>(?:[^<](?!\/code))*<\/code>)|@layout\((.*?)\)/gi,
 	attach: /@attach\((.*?)\)/g,
 	attachWithCodeTag: /(<code>(?:[^<](?!\/code))*<\/code>)|@attach\((.*?)\)/gi,
+	part : /(@part)([\S\s]*?)(@endpart)/gi,
 	partWithCodeTag : /(<code>(?:[^<](?!\/code))*<\/code>)|(@part)([\S\s]*?)(@endpart)/gi,
-	simplePart: /(?<=@part\()(.*),(.*)(?=\))/g,
+	simplePart: /(@part\()(.*),(.*)(\))/g,
 	simplePartWithCodeTag: /(<code>(?:[^<](?!\/code))*<\/code>)|(@part\()(.*),(.*)(\))/gi
 }
 
@@ -57,9 +58,9 @@ function renderPage(content) {
 		})
 
 		//remove simple part
-		content = content.replace(patterns.simplePartWithCodeTag, "")
+		content = content.replace(patterns.simplePart, "")
 	}
-	
+
 	//-----------------------------------------
 	//----2. RENDER ATTACH AND SECTION PAGE----
 	const attachLabels = content.match(patterns.attach)
@@ -67,9 +68,9 @@ function renderPage(content) {
 		attachLabels.forEach(function(match){
 			content = content.replace(patterns.attachWithCodeTag, renderLayout.bind(this, content))
 		})
-		
+
 		//remove all section tags
-		content = content.replace(patterns.partWithCodeTag, "")
+		content = content.replace(patterns.part, "")
 	}
 	
 	//--------------------------------
@@ -82,11 +83,14 @@ function renderPage(content) {
 		content = content.replace(patterns.importWithCodeTag, renderTag.bind(this, 'import'))
 	})
 
-	return content
+	return content.trim()
 }
 
 
 function renderTag(type, text) {
+	// console.log('>>tag--')
+	// console.log(text)
+	// console.log('--tag<<')
 	//If in <code> tag, return plain
 	if(text.includes('<code>'))
 		return text
@@ -130,7 +134,6 @@ function renderLayout(content, text) {
 						item => item.startsWith("(" + attachName) 
 					)[0]
 
-	// console.log(matchPart)
 	if(matchPart == undefined) return text;
 
 	const partContent = matchPart.split(")")[1]
