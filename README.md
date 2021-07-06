@@ -33,14 +33,17 @@ Use "import feature" above where you can reuse code in `dev/_partials`
 Run `node src/index.js`  
 Your production files are in `/public` folder
 
-## Todo / Plan
-- [ ]Prevent string "@ssg-improt()"  rendered as code.	
-- [ ]Meta and social share info
-- [ ]work with markdown
-- [X]partial
-- [ ]template 
+## Todo / Alpha Plan
+- [X] partial
+- [X] Prevent string "@ssg-import()"  rendered as code.	
+- [ ] Meta and social share info
+- [ ] work with markdown
+- [ ] work with subfolders
+- [ ] template 
+- [ ] simple website to demo everything
+- [ ] Publish as package at npm
 
-## Beta (later)
+## Todo (much later)
 - Minify everything
 - Live server
 - watch changes
