@@ -16,13 +16,20 @@ const patterns = {
 	layoutIncludeCodeTag: /(<code>(?:[^<](?!\/code))*<\/code>)|@layout\((.*?)\)/gi,
 	attach: /@attach\((.*?)\)/g,
 	attachIncludeCodeTag: /(<code>(?:[^<](?!\/code))*<\/code>)|@attach\((.*?)\)/gi,
-	sectionIncludeCodeTag : /(<code>(?:[^<](?!\/code))*<\/code>)|(@section)([\S\s]*?)(@endsection)/gi,
+	partIncludeCodeTag : /(<code>(?:[^<](?!\/code))*<\/code>)|(@part)([\S\s]*?)(@endpart)/gi,
 }
 
 //Loop all pages
 pages.forEach(function(page) {
 	//get & render contents
-	const content = _readFile(`${pageDir}/${page}`)
+	const item = `${pageDir}/${page}`
+
+	// if(fs.statSync(item).isDirectory()) {
+	// 	//if current item is a Dir
+	// 	//do somethings / loop again
+	// }
+
+	const content = _readFile(item)
 	const renderedContent = renderPage(content)
 
 	//save to new Dir
@@ -48,7 +55,7 @@ function renderPage(content) {
 		})
 		
 		//remove all section tags
-		content = content.replace(patterns.sectionIncludeCodeTag, "")
+		content = content.replace(patterns.partIncludeCodeTag, "")
 	}
 	
 	//--------------------------------
@@ -75,18 +82,21 @@ function renderTag(type, text) {
 }
 
 function renderLayout(content, text) {
-	let attachName = getTagContent(text)
+	let attachName = getTagContent(text) 
 	if(text.includes('<code>'))
 		return text
 
 	//TODO: can you make regex more dynamic 
 		//Makei it depend on variable needed(attachName)
-	const patternBetweenSection = /(?<=@section)([\S\s]*?)(?=@endsection)/g
-	const matchSection = content.match(patternBetweenSection).filter(
-						item => item.startsWith("(" + attachName)
-					)[0].split(")")[1]
-	
-	return matchSection
+	const patternBetweenPart = /(?<=@part)([\S\s]*?)(?=@endpart)/g
+	const matchPart = content.match(patternBetweenPart).filter(
+						item => item.startsWith("(" + attachName) 
+					)[0]
+	console.log(matchPart)
+	// if(matchPart == undefined) return;
+
+	const partContent = matchPart.split(")")[1]
+	return partContent
 }
 
 function _readFile(filename) {
