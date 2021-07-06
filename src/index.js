@@ -31,7 +31,7 @@ function renderPage(content) {
 	const layoutLabel = content.match(patterns.layout)
 	
 	if(layoutLabel != null) {
-		content = content.replace(patterns.layoutIncludeCodeTag, renderLayout('abc'))
+		content = content.replace(patterns.layoutIncludeCodeTag, renderTag.bind(this, 'layout'))
 	}
 
 	//----1. RENDER _IMPORT PAGE----
@@ -40,30 +40,18 @@ function renderPage(content) {
 		return content
 	
 	importLabel.forEach(function(match){
-		content = content.replace(patterns.importIncludeCodeTag, renderPartial)
+		content = content.replace(patterns.importIncludeCodeTag, renderTag.bind(this, 'import'))
 	})
 
 	return content
 }
 
-function renderLayout(text, text2) {
-	console.log(text)
-	console.log(text2)
+function renderTag(type, text) {
 	//If in <code> tag, return plain
 	if(text.includes('<code>'))
 		return text
 
-	const fileName = getCompleteFileName(text, 'layout')
-	const content = _readFile(fileName)
-	return content
-}
-
-function renderPartial(text) {
-	//If in <code> tag, return plain
-	if(text.includes('<code>'))
-		return text
-
-	const fileName = getCompleteFileName(text, 'import')
+	const fileName = getCompleteFileName(text, type)
 	const content = _readFile(fileName)
 	return content
 }
