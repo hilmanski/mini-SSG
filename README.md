@@ -49,17 +49,17 @@ Your production files are in `/public` folder
 - [X] partial
 - [X] Prevent string "@import()"  rendered as code.	
 - [X] template 
-- [ ] slots
-- [ ] work with markdown
+- [ ] work with markdown?
 - [ ] work with subfolders
 - [ ] simple website to demo everything
 - [ ] npm command to init folder and file as base
 - [ ] Publish as package at npm
 
 ## Todo (much later)
+- slots
 - Minify everything
 - Live server
 - watch changes
-- SaaS support
+- SASS/SCSS support
 
 
