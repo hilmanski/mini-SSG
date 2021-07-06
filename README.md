@@ -54,6 +54,7 @@ Your production files are in `/public` folder
 - [ ] work with markdown
 - [ ] work with subfolders
 - [ ] simple website to demo everything
+- [ ] npm command to init folder and file as base
 - [ ] Publish as package at npm
 
 ## Todo (much later)

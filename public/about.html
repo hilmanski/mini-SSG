@@ -4,12 +4,40 @@
 </nav>
 
 <main>
-	@attach(content)
+	
+	<h1>about page</h1>
+	<p>this is about page</p>
+
 </main>
+
+<sidebar>
+	
+	<h1>this is sidebar part</h1>
+	<p>hey im sidebar</p>
+
+</sidebar>	
+
+<section>
+	<p>	what if there is attach with 2 same content</p>
+	
+	<h1>this is sidebar part</h1>
+	<p>hey im sidebar</p>
+
+
+	<code>
+		//Test code tag shouldn't be included
+		@attach(sidebar)
+	</code>
+</section>
 
 <p>I'm a footer</p>
 
 @section(content)
 	<h1>about page</h1>
 	<p>this is about page</p>
+@endsection
+
+@section(sidebar)
+	<h1>this is sidebar part</h1>
+	<p>hey im sidebar</p>
 @endsection

@@ -39,8 +39,10 @@ function renderPage(content) {
 	const attachLabels = content.match(patterns.attach)
 	if(attachLabels != null) {
 		attachLabels.forEach(function(match){
-			content = content.replace(patterns.attachIncludeCodeTag, renderLayout)
+			content = content.replace(patterns.attachIncludeCodeTag, renderLayout.bind(this, content))
 		})
+		//remove section tag...
+			//=> to endsection
 	}
 	
 	//----2. RENDER _IMPORT PAGE----
@@ -65,8 +67,19 @@ function renderTag(type, text) {
 	return content
 }
 
-function renderLayout(text) {
-	console.log(text)
+function renderLayout(content, text) {
+	let attachName = getTagContent(text)
+	if(text.includes('<code>'))
+		return text
+
+	//TODO: can you make regex more dynamic 
+		//Makei it depend on variable needed(attachName)
+	const patternBetweenSection = /(?<=@section)([\S\s]*?)(?=@endsection)/g
+	const matchSection = content.match(patternBetweenSection).filter(
+						item => item.startsWith("(" + attachName)
+					)[0].split(")")[1]
+	
+	return matchSection
 }
 
 function _readFile(filename) {
@@ -74,18 +87,20 @@ function _readFile(filename) {
 }
 
 function getCompleteFileName(text, type) {
-	let filename = ''
+	let filename = getTagContent(text)
 	switch(type) {	
 		case 'import':
-			filename = text.replace("@import(", "").replace(")",".html")
-			return `${partialDir}/${filename}`
+			return `${partialDir}/${filename}.html`
 		break
 		case 'layout':
-			filename = text.replace("@layout(", "").replace(")",".html")
-			return `${layoutDir}/${filename}`
+			return `${layoutDir}/${filename}.html`
 		break
 		default:
 			console.log('No type file matched.')
 		break;
 	}
+}
+
+function getTagContent(tag){
+	return tag.split("(")[1].replace(")","")
 }

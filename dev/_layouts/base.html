@@ -4,4 +4,18 @@
 	@attach(content)
 </main>
 
+<sidebar>
+	@attach(sidebar)
+</sidebar>	
+
+<section>
+	<p>	what if there is attach with 2 same content</p>
+	@attach(sidebar)
+
+	<code>
+		//Test code tag shouldn't be included
+		@attach(sidebar)
+	</code>
+</section>
+
 @import(footer)
