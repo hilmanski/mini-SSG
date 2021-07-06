@@ -12,6 +12,8 @@ const patterns = {
 	importIncludeCodeTag: /(<code>(?:[^<](?!\/code))*<\/code>)|@import\((.*?)\)/gi,
 	layout: /@layout\((.*?)\)/g,
 	layoutIncludeCodeTag: /(<code>(?:[^<](?!\/code))*<\/code>)|@layout\((.*?)\)/gi,
+	attach: /@attach\((.*?)\)/g,
+	attachIncludeCodeTag: /(<code>(?:[^<](?!\/code))*<\/code>)|@attach\((.*?)\)/gi,
 }
 
 //Loop all pages
@@ -29,17 +31,24 @@ function renderPage(content) {
 
 	//----0. RENDER LAYOUT----
 	const layoutLabel = content.match(patterns.layout)
-	
 	if(layoutLabel != null) {
 		content = content.replace(patterns.layoutIncludeCodeTag, renderTag.bind(this, 'layout'))
 	}
 
-	//----1. RENDER _IMPORT PAGE----
-	const importLabel = content.match(patterns.import)
-	if(importLabel == null)
+	//----1. RENDER ATTACH AND SECTION PAGE----
+	const attachLabels = content.match(patterns.attach)
+	if(attachLabels != null) {
+		attachLabels.forEach(function(match){
+			content = content.replace(patterns.attachIncludeCodeTag, renderLayout)
+		})
+	}
+	
+	//----2. RENDER _IMPORT PAGE----
+	const importLabels = content.match(patterns.import)
+	if(importLabels == null)
 		return content
 	
-	importLabel.forEach(function(match){
+	importLabels.forEach(function(match){
 		content = content.replace(patterns.importIncludeCodeTag, renderTag.bind(this, 'import'))
 	})
 
@@ -54,6 +63,10 @@ function renderTag(type, text) {
 	const fileName = getCompleteFileName(text, type)
 	const content = _readFile(fileName)
 	return content
+}
+
+function renderLayout(text) {
+	console.log(text)
 }
 
 function _readFile(filename) {
