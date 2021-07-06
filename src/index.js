@@ -6,7 +6,10 @@ const partialLocation = "./dev/_partials"
 //Get pages
 const pages = fs.readdirSync(pageLocation)
 
-const patternImport = /@ssg-import\((.*?)\)/g
+const patterns = {
+	import: /@ssg-import\((.*?)\)/g,
+	importIncludeCodeTag: /(<code>(?:[^<](?!\/code))*<\/code>)|@ssg-import\((.*?)\)/gi,
+}
 
 //Loop all pages
 pages.forEach(function(page) {
@@ -21,14 +24,13 @@ pages.forEach(function(page) {
 
 function renderPage(content) {
 	let newContent = content
-	const matches = content.match(patternImport)
+	const matches = content.match(patterns.import)
 		
 	if(matches == null)
 		return content
 	
 	matches.forEach(function(match){
-		const patternWithoutCode = /(<code>(?:[^<](?!\/code))*<\/code>)|@ssg-import\((.*?)\)/gi
-		newContent = newContent.replace(patternWithoutCode, changePartial)
+		newContent = newContent.replace(patterns.importIncludeCodeTag, changePartial)
 	})
 
 	return newContent
@@ -44,7 +46,7 @@ function changePartial(text)
 						 .replace(")",".html")
 	
 	const partialContent = fs.readFileSync(`${partialLocation}/${fileName}`)
-							.toString()
+							 .toString()
 
 	return partialContent
 }
