@@ -50,7 +50,6 @@ Your production files are in `/public` folder
 - [X] Prevent string "@import()"  rendered as code.	
 - [X] template 
 - [ ] slots
-- [ ] Meta and social share info
 - [ ] work with markdown
 - [ ] work with subfolders
 - [ ] simple website to demo everything
