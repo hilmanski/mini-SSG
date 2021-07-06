@@ -7,6 +7,8 @@ const partialDir = "./dev/_partials"
 //Get pages
 const pages = fs.readdirSync(pageDir)
 
+//Todo: can you remove "includecodeTag"? 
+	//can it be auto ignore whats inside code tag
 const patterns = {
 	import: /@import\((.*?)\)/g,
 	importIncludeCodeTag: /(<code>(?:[^<](?!\/code))*<\/code>)|@import\((.*?)\)/gi,
@@ -30,12 +32,14 @@ pages.forEach(function(page) {
 
 function renderPage(content) {
 
-	//----0. RENDER LAYOUT----
+	//--------------------------------
+	//----0. RENDER LAYOUT------------
 	const layoutLabel = content.match(patterns.layout)
 	if(layoutLabel != null) {
 		content = content.replace(patterns.layoutIncludeCodeTag, renderTag.bind(this, 'layout'))
 	}
 
+	//-----------------------------------------
 	//----1. RENDER ATTACH AND SECTION PAGE----
 	const attachLabels = content.match(patterns.attach)
 	if(attachLabels != null) {
@@ -47,6 +51,7 @@ function renderPage(content) {
 		content = content.replace(patterns.sectionIncludeCodeTag, "")
 	}
 	
+	//--------------------------------
 	//----2. RENDER _IMPORT PAGE----
 	const importLabels = content.match(patterns.import)
 	if(importLabels == null)
