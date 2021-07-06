@@ -14,6 +14,7 @@ const patterns = {
 	layoutIncludeCodeTag: /(<code>(?:[^<](?!\/code))*<\/code>)|@layout\((.*?)\)/gi,
 	attach: /@attach\((.*?)\)/g,
 	attachIncludeCodeTag: /(<code>(?:[^<](?!\/code))*<\/code>)|@attach\((.*?)\)/gi,
+	sectionIncludeCodeTag : /(<code>(?:[^<](?!\/code))*<\/code>)|(@section)([\S\s]*?)(@endsection)/gi,
 }
 
 //Loop all pages
@@ -41,8 +42,9 @@ function renderPage(content) {
 		attachLabels.forEach(function(match){
 			content = content.replace(patterns.attachIncludeCodeTag, renderLayout.bind(this, content))
 		})
-		//remove section tag...
-			//=> to endsection
+		
+		//remove all section tags
+		content = content.replace(patterns.sectionIncludeCodeTag, "")
 	}
 	
 	//----2. RENDER _IMPORT PAGE----

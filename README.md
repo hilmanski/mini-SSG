@@ -9,7 +9,7 @@ Inspired by Laravel Blade Template and Sergey.cool SSG
 
 You don't have to use everything or anything at all, it's all up to you
 
-1. Use layout 
+1. Use layout   
 layout must be on top of the file and only one per page
 ```
 @layout(base) //no need to write extension -> .html
@@ -48,7 +48,7 @@ Your production files are in `/public` folder
 ## Todo / Alpha Plan
 - [X] partial
 - [X] Prevent string "@import()"  rendered as code.	
-- [ ] template 
+- [X] template 
 - [ ] slots
 - [ ] Meta and social share info
 - [ ] work with markdown
