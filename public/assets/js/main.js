@@ -1,1 +1,1 @@
-alert('yeay im loaded!')
+showAlert('yeay im loaded!') function showAlert(msg) { alert(msg) }

@@ -92,18 +92,18 @@ Your production files are in `/public` folder
 - [X] template (layout)
 - [X] simple attach/section with 2nd parameter as value
 - [X] slots -> inject text or div in component
-- [ ] work with markdown?
+- [ ] work with markdown (not sure if this needed)
 - [X] work with subfolders
 - [X] generate assets folder
 - [ ] Better error msg if any typo on syntax / not match
 - [ ] simple website to demo everything
 - [ ] npm command to init folder and file as base
 - [ ] Publish as package at npm
-
-## Todo (much later)
-- Minify everything (CSS, JS, HTML)
-- Live server
-- watch changes
-- SASS/SCSS support
+- [X] Live server
+- [X] watch changes
+- [ ] Live Reload
+- [ ] Only 'related change' need to re-render (idea: create meta-temp-folder)
+- [ ] SASS/SCSS support
+- [X] Minify everything (CSS, JS, HTML)
 
 

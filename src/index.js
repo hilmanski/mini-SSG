@@ -1,4 +1,5 @@
 const fs = require('fs');
+const minifier = require('string-minify');
 
 const dir = {
 	page : "./dev/pages",
@@ -18,6 +19,9 @@ const patterns = {
 	component: /(@component)([\S\s]*?)(@endcomponent)/g,
 	slot: /(@slot)([\S\s]*?)(@endslot)/g,
 }
+
+
+function compileEverything() { 
 
 //=================================
 //==== ASSET PAGES  ===============
@@ -39,7 +43,7 @@ function generateAsset(item, fileName) {
 	}
 
 	const content = readFileRaw(item)
-	fs.writeFileSync(`./public/assets/${fileName}`, content)
+	fs.writeFileSync(`./public/assets/${fileName}`, minifier(content))
 }
 
 function generateAssetSubFolder(item) {
@@ -80,7 +84,7 @@ function generateFile(item, fileName) {
 	const renderedContent = renderPage(rawContent)
 
 	//save to new Dir
-	fs.writeFileSync(`./public/${fileName}`, renderedContent)
+	fs.writeFileSync(`./public/${fileName}`, minifier(renderedContent))
 }
 
 function generatePageSubFolder(item) {
@@ -266,4 +270,35 @@ function getCompleteFileName(text, type) {
 
 function getTagContent(tag){
 	return tag.split("(")[1].replace(")","")
+}
+
+} //end compile everything
+compileEverything() //autoRun 1st time
+
+//=================================
+//==== LIVE RELOAD AND WATCH  =====
+//=================================
+const isWatching = process.argv.includes('--watch');
+if(isWatching) {
+	console.log('Your site is on http://localhost:3000')
+
+	const chokidar = require('chokidar');
+	const finalhandler = require('finalhandler')
+	const http = require('http')
+	const serveStatic = require('serve-static')
+
+	chokidar.watch('./dev').on('all', (event, path) => {
+	  compileEverything()
+	});
+
+	//Server
+	var serve = serveStatic('./public', { 'index': ['index.html', 'index.htm'] })
+	 
+	// Create server
+	var server = http.createServer(function onRequest (req, res) {
+	  serve(req, res, finalhandler(req, res))
+	})
+	 
+	// Listen
+	server.listen(3000)
 }
