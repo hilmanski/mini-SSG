@@ -91,7 +91,7 @@ Your production files are in `/public` folder
 - [X] Prevent string "@import()"  rendered as code.	
 - [X] template (layout)
 - [X] simple attach/section with 2nd parameter as value
-- [ ] slots -> inject text or div in component
+- [X] slots -> inject text or div in component
 - [ ] work with markdown?
 - [X] work with subfolders
 - [ ] Better error msg if any typo on syntax / not match

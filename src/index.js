@@ -165,13 +165,6 @@ function renderLayout(content, text) {
 }
 
 function renderComponent(content, rawComp) {
-	/** Write what to do here
-		[DONE] 1 get component file name 
-		[DONE] 2 get file string (WHOLE fle) 
-		[DONE] 3 maskCodetag, since component can potentially have code
-		[DONE] 4 $NewcomponentContent = replace attach with slot
-		5 replace whole component @mainfile with $NewcomponentContent
-	*/
 	const compName = rawComp.split(")")[0].replace('@component(', '')
 	let compContent = maskCodeTag(renderTag('component', compName))
 	compContent = compContent.replace(patterns.attach, renderSlot.bind(this, rawComp))
