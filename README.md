@@ -48,8 +48,9 @@ Your production files are in `/public` folder
 ## Todo / Alpha Plan
 - [X] partial
 - [X] Prevent string "@import()"  rendered as code.	
-- [X] template 
-- [ ] simple attach/part with 2nd parameter as value
+- [X] template (layout)
+- [X] simple attach/part with 2nd parameter as value
+- [ ] slots
 - [ ] work with markdown?
 - [ ] work with subfolders
 - [ ] Better error msg if any typo on syntax / not match
@@ -58,7 +59,6 @@ Your production files are in `/public` folder
 - [ ] Publish as package at npm
 
 ## Todo (much later)
-- slots
 - Minify everything
 - Live server
 - watch changes
