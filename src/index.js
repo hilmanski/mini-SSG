@@ -18,14 +18,36 @@ let codeTagHolder = []
 //Get and Loop pages
 const pages = fs.readdirSync(pageDir)
 pages.forEach(function(page) {
-	const item = `${pageDir}/${page}`
+	runFileGenerator(`${pageDir}/${page}`, page)
+})
+
+function runFileGenerator(item, fileName) {
+	//Check if it's a directory
+	if(fs.statSync(item).isDirectory()) {
+		return runSubFolderGenerator(item)
+	}
+
 	const rawContent = readFile(item)
 	const renderedContent = renderPage(rawContent)
 
 	//save to new Dir
-	fs.writeFileSync(`./public/${page}`, renderedContent)
-})
+	fs.writeFileSync(`./public/${fileName}`, renderedContent)
+}
 
+function runSubFolderGenerator(item) {
+	const subFolder = item.split('/')[item.split('/').length - 1]
+	const subPages = fs.readdirSync(item)
+
+	//make dir if not exists
+	if (!fs.existsSync(`./public/${subFolder}`)){
+	    fs.mkdirSync(`./public/${subFolder}`);
+	}
+
+	subPages.forEach(function(page) {
+		runFileGenerator(`${pageDir}/${subFolder}/${page}`, `${subFolder}/${page}`)
+	})
+	return
+}
 
 function renderPage(content) {
 	

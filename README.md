@@ -81,7 +81,7 @@ Your production files are in `/public` folder
 - [X] simple attach/part with 2nd parameter as value
 - [ ] slots
 - [ ] work with markdown?
-- [ ] work with subfolders
+- [X] work with subfolders
 - [ ] Better error msg if any typo on syntax / not match
 - [ ] simple website to demo everything
 - [ ] npm command to init folder and file as base
