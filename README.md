@@ -15,10 +15,33 @@ layout must be on top of the file and only one per page
 @layout(base) //no need to write extension -> .html
 ```
 
-2. Import partial code
+Attach code on layout with part  
+1a. Simple part (for text only) 
+```
+//On page
+@part(title, this is title)
+
+//On layout
+@attach(title)
+```
+
+1b. Complex part (For html element)
+```
+//On page
+@part(content)
+	<div> this is content </div>
+@endpart
+
+//On Layout
+@attach(content)
+```
+
+3. Import partial code
 ```
 @import(fileName) //no need to write extension -> .html
 ```
+
+4. Import can contains other import
 
 ## Examples
 
@@ -38,6 +61,12 @@ To use in HTML files
 @import(footer)
 ```
 
+## Caveat
+If you write any of "mini-ssg" syntax above, put it on code tag
+```
+<code> @import(header) </code>
+```
+It won't be rendered as partial layout
 
 ## Usage
 Write your HTML files in `/dev/pages`  
