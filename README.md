@@ -80,6 +80,14 @@ It won't be rendered as partial layout
 @component .. @endcomponent
 ```
 
+## dependency
+```
+chokidar
+finalhandler
+serve-static
+string-minify
+```
+
 ## Usage
 Write your HTML files in `/dev/pages`  
 Use "import feature" above where you can reuse code in `dev/_partials`  
