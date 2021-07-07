@@ -94,6 +94,7 @@ Your production files are in `/public` folder
 - [X] slots -> inject text or div in component
 - [ ] work with markdown?
 - [X] work with subfolders
+- [X] generate assets folder
 - [ ] Better error msg if any typo on syntax / not match
 - [ ] simple website to demo everything
 - [ ] npm command to init folder and file as base

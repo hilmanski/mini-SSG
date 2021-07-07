@@ -5,6 +5,7 @@ const dir = {
 	layout : "./dev/_layouts",
 	import : "./dev/_imports",
 	component : "./dev/_components"	,
+	assets : "./dev/assets"	,
 }
 
 const patterns = {
@@ -18,18 +19,60 @@ const patterns = {
 	slot: /(@slot)([\S\s]*?)(@endslot)/g,
 }
 
-let codeTagHolder = []
+//=================================
+//==== ASSET PAGES  ===============
+//=================================
+const assetFiles = fs.readdirSync(dir.assets)
 
-//Get and Loop pages
-const pages = fs.readdirSync(dir.page)
-pages.forEach(function(page) {
-	runFileGenerator(`${dir.page}/${page}`, page)
+if(assetFiles != null)
+	if (!fs.existsSync(`./public/assets`))
+		fs.mkdirSync(`./public/assets`)
+
+assetFiles.forEach(function(page) {
+	generateAsset(`${dir.assets}/${page}`, page)
 })
 
-function runFileGenerator(item, fileName) {
+function generateAsset(item, fileName) {
 	//Check if it's a directory
 	if(fs.statSync(item).isDirectory()) {
-		return runSubFolderGenerator(item)
+		return generateAssetSubFolder(item)
+	}
+
+	const content = readFileRaw(item)
+	fs.writeFileSync(`./public/assets/${fileName}`, content)
+}
+
+function generateAssetSubFolder(item) {
+	const subFolder = item.split('/')[item.split('/').length - 1]
+	const subPages = fs.readdirSync(item)
+
+	//make dir if not exists
+	if (!fs.existsSync(`./public/assets/${subFolder}`)){
+	    fs.mkdirSync(`./public/assets/${subFolder}`);
+	}
+
+	subPages.forEach(function(page) {
+		generateAsset(`${dir.assets}/${subFolder}/${page}`, `${subFolder}/${page}`)
+	})
+	return
+}
+
+//=================================
+//==== STATIC HTML PAGES  =========
+//=================================
+
+let codeTagHolder = []
+
+//Get and Loop HTML pages
+const pages = fs.readdirSync(dir.page)
+pages.forEach(function(page) {
+	generateFile(`${dir.page}/${page}`, page)
+})
+
+function generateFile(item, fileName) {
+	//Check if it's a directory
+	if(fs.statSync(item).isDirectory()) {
+		return generatePageSubFolder(item)
 	}
 
 	codeTagHolder = [] //always empty for new file
@@ -40,7 +83,7 @@ function runFileGenerator(item, fileName) {
 	fs.writeFileSync(`./public/${fileName}`, renderedContent)
 }
 
-function runSubFolderGenerator(item) {
+function generatePageSubFolder(item) {
 	const subFolder = item.split('/')[item.split('/').length - 1]
 	const subPages = fs.readdirSync(item)
 
@@ -50,7 +93,7 @@ function runSubFolderGenerator(item) {
 	}
 
 	subPages.forEach(function(page) {
-		runFileGenerator(`${dir.page}/${subFolder}/${page}`, `${subFolder}/${page}`)
+		generateFile(`${dir.page}/${subFolder}/${page}`, `${subFolder}/${page}`)
 	})
 	return
 }
@@ -190,6 +233,10 @@ function renderSlot(rawComp, rawAttach) {
 	const slotContent = matchSlot.replace(`(${attachName})`,'')
 
 	return slotContent
+}
+
+function readFileRaw(filename) {
+	return fs.readFileSync(filename).toString()
 }
 
 function readFile(filename) {
