@@ -88,7 +88,7 @@ Your production files are in `/public` folder
 - [ ] Publish as package at npm
 
 ## Todo (much later)
-- Minify everything
+- Minify everything (CSS, JS, HTML)
 - Live server
 - watch changes
 - SASS/SCSS support
