@@ -1,10 +1,17 @@
 @layout(base)
 
 @section(content)
-<main>
+<div>
 	<h1>I'm slotttt</h1>
 
+	<p>Lets try simple component, where no named slot needed</p>
+	@component(simple)
+		<span>
+			I'm a simple component with no slot named
+		</span>
+	@endcomponent
 
+	<hr>
 	<p> Usage Alert component: </p>
 	@component(alert)
 		@slot(plainText)
@@ -19,5 +26,6 @@
 			</div>
 		@endslot
 	@endcomponent
-</main>
+</div>
+
 @endsection

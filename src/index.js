@@ -93,7 +93,6 @@ function renderPage(content) {
 	}
 
 	//Render components
-	//Todo: Test -> what if there is a code in components
 	const componentLabels = content.match(patterns.component)
 	if(componentLabels != null) {
 		componentLabels.forEach(function(match){
@@ -176,11 +175,20 @@ function renderSlot(rawComp, rawAttach) {
 	const attachName = getTagContent(rawAttach) 
 
 	const patternBetweenSlot = /(?<=@slot)([\S\s]*?)(?=@endslot)/g
-	const matchSlot = rawComp.match(patternBetweenSlot).filter(
+	const slots = rawComp.match(patternBetweenSlot)
+
+	let matchSlot = ''
+	
+	if(slots == null) { //If No slots mean simple component
+		matchSlot = rawComp.split(')').slice(1).toString()
+							.replace('@endcomponent', '')
+	} else {
+		matchSlot = slots.filter(
 							item => item.startsWith("(" + attachName) 
 						)[0]
-
+	}
 	const slotContent = matchSlot.replace(`(${attachName})`,'')
+
 	return slotContent
 }
 
