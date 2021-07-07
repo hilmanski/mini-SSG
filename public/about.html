@@ -7,20 +7,10 @@
 	<meta name="desc" content="Deskripsi from About page">
 </head>
 <body>
-
 	<p>I'm a header</p>
 <nav>
 	<a href="">link</a>
 </nav>
-
-	<main>
-		
-	<h1>main content of about page</h1>
-	<p>this is about page</p>
-	there is a code here
-	<code>
-		@layout(bases
-	</main>
 
 	<sidebar>
 		
@@ -29,13 +19,27 @@
 
 	</sidebar>	
 
-	<section>
-		<p>	what if there is attach with 2 same content</p>
+	<main>
 		
-	<h1>this is sidebar part</h1>
-	<p>hey im sidebar</p>
+	<h1>main content of about page</h1>
+	<p>this is about page</p>
+	there is a code here code 1
+	<code>
+		@layout(bases)
+		test layout without endpart
+	</code>
 
+	there is a code here again (code 2)
+	current problem if ")" exixsts, check which code poteltially problematic
+	<code>
+		@part(title, About Page Title)
+		test part
+		@endpart
+	</code>
 
+	</main>
+
+	<section>
 		<p>You should see code tag below</p>
 		<code>
 			//Test code tag shouldn't be included
@@ -47,3 +51,10 @@
 		
 </body>
 </html>
+
+
+
+
+
+
+

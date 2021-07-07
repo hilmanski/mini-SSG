@@ -4,36 +4,23 @@ const pageDir = "./dev/pages"
 const layoutDir = "./dev/_layouts"
 const partialDir = "./dev/_partials"
 
-//Get pages
-const pages = fs.readdirSync(pageDir)
-
-//Todo: can you remove "WithcodeTag"? 
-	//can it be auto ignore whats inside code tag
 const patterns = {
+	codeTag: /(<code>(?:[^<](?!\/code))*<\/code>)/g,
 	import: /@import\((.*?)\)/g,
-	importWithCodeTag: /(<code>(?:[^<](?!\/code))*<\/code>)|@import\((.*?)\)/gi,
 	layout: /@layout\((.*?)\)/g,
-	layoutWithCodeTag: /(<code>(?:[^<](?!\/code))*<\/code>)|@layout\((.*?)\)/gi,
 	attach: /@attach\((.*?)\)/g,
-	attachWithCodeTag: /(<code>(?:[^<](?!\/code))*<\/code>)|@attach\((.*?)\)/gi,
 	part : /(@part)([\S\s]*?)(@endpart)/gi,
-	partWithCodeTag : /(<code>(?:[^<](?!\/code))*<\/code>)|(@part)([\S\s]*?)(@endpart)/gi,
-	simplePart: /(@part\()(.*),(.*)(\))/g,
-	simplePartWithCodeTag: /(<code>(?:[^<](?!\/code))*<\/code>)|(@part\()(.*),(.*)(\))/gi
+	simplePart: /(@part\()(.*?),(.*?)(\))/g,
 }
 
-//Loop all pages
+let codeTagHolder = []
+
+//Get and Loop pages
+const pages = fs.readdirSync(pageDir)
 pages.forEach(function(page) {
-	//get & render contents
 	const item = `${pageDir}/${page}`
-
-	// if(fs.statSync(item).isDirectory()) {
-	// 	//if current item is a Dir
-	// 	//do somethings / loop again
-	// }
-
-	const content = _readFile(item)
-	const renderedContent = renderPage(content)
+	const rawContent = readFile(item)
+	const renderedContent = renderPage(rawContent)
 
 	//save to new Dir
 	fs.writeFileSync(`./public/${page}`, renderedContent)
@@ -41,71 +28,80 @@ pages.forEach(function(page) {
 
 
 function renderPage(content) {
+	
+	//Mask any code tags
+	codeTagHolder = [] //always empty for new file
+	content = maskCodeTag(content)
 
-	//--------------------------------
-	//----0. RENDER LAYOUT------------
+	//Render Layout
 	const layoutLabel = content.match(patterns.layout)
 	if(layoutLabel != null) {
-		content = content.replace(patterns.layoutWithCodeTag, renderTag.bind(this, 'layout'))
+		content = content.replace(patterns.layout, renderTag.bind(this, 'layout'))
 	}
+	content = maskCodeTag(content)
 
-	//-------------------------------------
-	//----1. RENDER simple part/attach ----
+	//Render simple part
 	const simplePartLabels = content.match(patterns.simplePart)
 	if(simplePartLabels != null) {
 		simplePartLabels.forEach(function(match){
-			content = content.replace(patterns.attachWithCodeTag, renderSimplePart.bind(this, content))
+			content = content.replace(patterns.attach, renderSimplePart.bind(this, content))
 		})
 
-		//remove simple part
-		content = content.replace(patterns.simplePart, "")
+		content = content.replace(patterns.simplePart, '')
 	}
 
-	//-----------------------------------------
-	//----2. RENDER ATTACH AND SECTION PAGE----
+	//Render complex part / swap attach & part
 	const attachLabels = content.match(patterns.attach)
 	if(attachLabels != null) {
 		attachLabels.forEach(function(match){
-			content = content.replace(patterns.attachWithCodeTag, renderLayout.bind(this, content))
+			content = content.replace(patterns.attach, renderLayout.bind(this, content))
 		})
 
-		//remove all section tags
-		content = content.replace(patterns.part, "")
+		content = content.replace(patterns.part, '')
 	}
-	
-	//--------------------------------
-	//----3. RENDER _IMPORT PAGE----
+
+	//Render Import pages
 	const importLabels = content.match(patterns.import)
 	if(importLabels == null)
 		return content
 	
 	importLabels.forEach(function(match){
-		content = content.replace(patterns.importWithCodeTag, renderTag.bind(this, 'import'))
+		content = content.replace(patterns.import, renderTag.bind(this, 'import'))
 	})
 
+	content = unMaskCodeTag(content)
 	return content.trim()
 }
 
+function maskCodeTag(content) {
+	const codeTags = content.match(patterns.codeTag)
+	if(codeTags != null) {
+		codeTags.forEach(function(match){
+			let newHolder = 'nr-' + Math.floor(Math.random() * 99999)
+			codeTagHolder[newHolder] = match
+			content = content.replace(match, newHolder)
+		})
+	}
 
-function renderTag(type, text) {
-	// console.log('>>tag--')
-	// console.log(text)
-	// console.log('--tag<<')
-	//If in <code> tag, return plain
-	if(text.includes('<code>'))
-		return text
-
-	const fileName = getCompleteFileName(text, type)
-	const content = _readFile(fileName)
 	return content
 }
 
+function unMaskCodeTag(content) {
+	if(codeTagHolder != null) 
+		for (const [key, value] of Object.entries(codeTagHolder)) {
+		  content = content.replace(key, value)
+		}
+
+	return content
+}
+
+function renderTag(type, text) {
+	const fileName = getCompleteFileName(text, type)
+	const content = readFile(fileName)
+	return content
+}
 
 function renderSimplePart(content, text) {
-	//If in <code> tag, return plain
-	if(text.includes('<code>'))
-		return text
-
 	const attachName = getTagContent(text.split(',')[0])
 	
 	const patternBetweenPart = /(?<=@part\()(.*),(.*)(?=\))/g
@@ -113,7 +109,7 @@ function renderSimplePart(content, text) {
 							item => item.startsWith(attachName) 
 						)[0]
 	
-	//Since attach can include both simple and not simple part
+	//Since attach can include both simple & not simple part
 		//we need to make an exception
 	if(matchPart == undefined)
 		return text
@@ -123,24 +119,20 @@ function renderSimplePart(content, text) {
 }
 
 function renderLayout(content, text) {
-	let attachName = getTagContent(text) 
-	if(text.includes('<code>'))
-		return text
-
-	//TODO: can you make regex more dynamic 
-		//Makei it depend on variable needed(attachName)
+	const attachName = getTagContent(text) 
 	const patternBetweenPart = /(?<=@part)([\S\s]*?)(?=@endpart)/g
+
 	const matchPart = content.match(patternBetweenPart).filter(
 						item => item.startsWith("(" + attachName) 
 					)[0]
 
 	if(matchPart == undefined) return text;
 
-	const partContent = matchPart.split(")")[1]
+	const partContent = matchPart.replace(`(${attachName})`,'')
 	return partContent
 }
 
-function _readFile(filename) {
+function readFile(filename) {
 	return fs.readFileSync(filename).toString()
 }
 

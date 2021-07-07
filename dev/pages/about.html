@@ -3,17 +3,26 @@
 @part(title, About Page Title)
 @part(desc, Deskripsi from About page)
 
-@part(content)
-	<h1>main content of about page</h1>
-	<p>this is about page</p>
-	there is a code here
-	<code>
-		@layout(bases)
-		@part(title, About Page Title)
-	</code>
-@endpart
 
 @part(sidebar)
 	<h1>this is sidebar part</h1>
 	<p>hey im sidebar</p>
+@endpart
+
+@part(content)
+	<h1>main content of about page</h1>
+	<p>this is about page</p>
+	there is a code here code 1
+	<code>
+		@layout(bases)
+		test layout without endpart
+	</code>
+
+	there is a code here again (code 2)
+	current problem if ")" exixsts, check which code poteltially problematic
+	<code>
+		@part(title, About Page Title)
+		test part
+		@endpart
+	</code>
 @endpart
