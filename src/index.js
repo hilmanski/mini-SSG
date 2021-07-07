@@ -1,8 +1,11 @@
 const fs = require('fs');
 
-const pageDir = "./dev/pages"
-const layoutDir = "./dev/_layouts"
-const partialDir = "./dev/_partials"
+const dir = {
+	page : "./dev/pages",
+	layout : "./dev/_layouts",
+	partial : "./dev/_partials",
+	component : "./dev/_components"	,
+}
 
 const patterns = {
 	codeTag: /(<code>(?:[^<](?!\/code))*<\/code>)/g,
@@ -12,14 +15,15 @@ const patterns = {
 	section : /(@section)([\S\s]*?)(@endsection)/gi,
 	simpleSection: /(@section\()(.*?),(.*?)(\))/g,
 	component: /(@component)([\S\s]*?)(@endcomponent)/g,
+	slot: /(@slot)([\S\s]*?)(@endslot)/g,
 }
 
 let codeTagHolder = []
 
 //Get and Loop pages
-const pages = fs.readdirSync(pageDir)
+const pages = fs.readdirSync(dir.page)
 pages.forEach(function(page) {
-	runFileGenerator(`${pageDir}/${page}`, page)
+	runFileGenerator(`${dir.page}/${page}`, page)
 })
 
 function runFileGenerator(item, fileName) {
@@ -46,7 +50,7 @@ function runSubFolderGenerator(item) {
 	}
 
 	subPages.forEach(function(page) {
-		runFileGenerator(`${pageDir}/${subFolder}/${page}`, `${subFolder}/${page}`)
+		runFileGenerator(`${dir.page}/${subFolder}/${page}`, `${subFolder}/${page}`)
 	})
 	return
 }
@@ -92,9 +96,11 @@ function renderPage(content) {
 	//Todo: Test -> what if there is a code in components
 	const componentLabels = content.match(patterns.component)
 	if(componentLabels != null) {
-		//do something here...
-		//renderComponent(content) 
+		componentLabels.forEach(function(match){
+			content = content.replace(patterns.component, renderComponent.bind(this, content))
+		})
 	}
+
 	return unMaskCodeTag(content.trim())
 }
 
@@ -158,18 +164,51 @@ function renderLayout(content, text) {
 	return sectionContent
 }
 
+function renderComponent(content, rawComp) {
+	/** Write what to do here
+		[DONE] 1 get component file name 
+		[DONE] 2 get file string (WHOLE fle) 
+		[DONE] 3 maskCodetag, since component can potentially have code
+		[DONE] 4 $NewcomponentContent = replace attach with slot
+		5 replace whole component @mainfile with $NewcomponentContent
+	*/
+	const compName = rawComp.split(")")[0].replace('@component(', '')
+	let compContent = maskCodeTag(renderTag('component', compName))
+	compContent = compContent.replace(patterns.attach, renderSlot.bind(this, rawComp))
+	
+	return compContent
+}
+
+function renderSlot(rawComp, rawAttach) {
+	const attachName = getTagContent(rawAttach) 
+
+	const patternBetweenSlot = /(?<=@slot)([\S\s]*?)(?=@endslot)/g
+	const matchSlot = rawComp.match(patternBetweenSlot).filter(
+							item => item.startsWith("(" + attachName) 
+						)[0]
+
+	const slotContent = matchSlot.replace(`(${attachName})`,'')
+	return slotContent
+}
+
 function readFile(filename) {
 	return maskCodeTag(fs.readFileSync(filename).toString())
 }
 
 function getCompleteFileName(text, type) {
-	let filename = getTagContent(text)
+	let filename = ''
 	switch(type) {	
 		case 'import':
-			return `${partialDir}/${filename}.html`
+			filename = getTagContent(text)
+			return `${dir.partial}/${filename}.html`
 		break
 		case 'layout':
-			return `${layoutDir}/${filename}.html`
+			filename = getTagContent(text)
+			return `${dir.layout}/${filename}.html`
+		break
+		case 'component':
+			filename = text
+			return `${dir.component}/${filename}.html`
 		break
 		default:
 			console.log('No type file matched.')
