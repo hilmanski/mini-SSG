@@ -113,6 +113,7 @@ Your production files are in `/public` folder
 - [ ] Live Reload
 - [ ] Only 'related change' need to re-render (idea: create meta-temp-folder)
 - [ ] SASS/SCSS support
+- [ ] Automate test
 - [X] Minify everything (CSS, JS, HTML)
 
 

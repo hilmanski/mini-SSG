@@ -1,14 +1,14 @@
 #!/usr/bin/env node
 
 const fs = require('fs');
+const path = require('path');
 const minifier = require('string-minify');
 
 const dir = {
-	page : "./dev/pages",
+	static : "./dev/pages",
 	layout : "./dev/_layouts",
 	import : "./dev/_imports",
-	component : "./dev/_components"	,
-	assets : "./dev/assets"	,
+	component : "./dev/_components",
 }
 
 const patterns = {
@@ -23,84 +23,48 @@ const patterns = {
 }
 
 
-function compileEverything() { 
-
-//=================================
-//==== ASSET PAGES  ===============
-//=================================
-const assetFiles = fs.readdirSync(dir.assets)
-
-if(assetFiles != null)
-	if (!fs.existsSync(`./public/assets`))
-		fs.mkdirSync(`./public/assets`)
-
-assetFiles.forEach(function(page) {
-	generateAsset(`${dir.assets}/${page}`, page)
-})
-
-function generateAsset(item, fileName) {
-	//Check if it's a directory
-	if(fs.statSync(item).isDirectory()) {
-		return generateAssetSubFolder(item)
-	}
-
-	const content = readFileRaw(item)
-	fs.writeFileSync(`./public/assets/${fileName}`, minifier(content))
-}
-
-function generateAssetSubFolder(item) {
-	const subFolder = item.split('/')[item.split('/').length - 1]
-	const subPages = fs.readdirSync(item)
-
-	//make dir if not exists
-	if (!fs.existsSync(`./public/assets/${subFolder}`)){
-	    fs.mkdirSync(`./public/assets/${subFolder}`);
-	}
-
-	subPages.forEach(function(page) {
-		generateAsset(`${dir.assets}/${subFolder}/${page}`, `${subFolder}/${page}`)
-	})
-	return
-}
-
-//=================================
-//==== STATIC HTML PAGES  =========
-//=================================
+function runSSG() { 
 
 let codeTagHolder = []
 
-//Get and Loop HTML pages
-const pages = fs.readdirSync(dir.page)
+//static sites
+const pages = fs.readdirSync(dir.static)
+createFolderIfNone('./public/')
 pages.forEach(function(page) {
-	generateFile(`${dir.page}/${page}`, page)
+	generateFile(`${dir.static}/${page}`, page)
 })
 
-function generateFile(item, fileName) {
-	//Check if it's a directory
-	if(fs.statSync(item).isDirectory()) {
+function generateFile(item, fileName) {	
+	//check if DIR
+	if(fs.statSync(item).isDirectory()) { 
 		return generatePageSubFolder(item)
 	}
 
-	codeTagHolder = [] //always empty for new file
-	const rawContent = readFile(item)
-	const renderedContent = renderPage(rawContent)
+	//restart for new files
+	codeTagHolder = [] 
+
+	let content = readFile(item)
+
+	const ext = path.extname(fileName);
+	if(ext == ".html") {
+		content = renderPage(content)
+	}
 
 	//save to new Dir
-	fs.writeFileSync(`./public/${fileName}`, minifier(renderedContent))
+	fs.writeFileSync(`./public/${fileName}`, minifier(content))
+	return
 }
 
 function generatePageSubFolder(item) {
-	const subFolder = item.split('/')[item.split('/').length - 1]
-	const subPages = fs.readdirSync(item)
+	let subFolder = item.replace('./dev/pages/', '')
 
-	//make dir if not exists
-	if (!fs.existsSync(`./public/${subFolder}`)){
-	    fs.mkdirSync(`./public/${subFolder}`);
-	}
+	const subPages = fs.readdirSync(item)
+	createFolderIfNone(`./public/${subFolder}`)
 
 	subPages.forEach(function(page) {
-		generateFile(`${dir.page}/${subFolder}/${page}`, `${subFolder}/${page}`)
+		generateFile(`${dir.static}/${subFolder}/${page}`, `${subFolder}/${page}`)
 	})
+
 	return
 }
 
@@ -274,8 +238,15 @@ function getTagContent(tag){
 	return tag.split("(")[1].replace(")","")
 }
 
-} //end compile everything
-compileEverything() //autoRun 1st time
+function createFolderIfNone(dirName) {
+	if (!fs.existsSync(dirName))
+	    fs.mkdirSync(dirName);
+	
+	return
+}
+
+} //end runSSG
+runSSG() //autoRun 1st time
 
 //=================================
 //==== LIVE RELOAD AND WATCH  =====
@@ -290,7 +261,7 @@ if(isWatching) {
 	const serveStatic = require('serve-static')
 
 	chokidar.watch('./dev').on('all', (event, path) => {
-	  compileEverything()
+	  runSSG()
 	});
 
 	//Server

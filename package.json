@@ -7,8 +7,8 @@
     "minissg": "./src/index.js"
   },
   "scripts": {
-    "start": "node index.js",
-    "dev" : "node index.js --watch",
+    "start": "node src/index.js",
+    "dev" : "node src/index.js --watch",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
    "repository": {
