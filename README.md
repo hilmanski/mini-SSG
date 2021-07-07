@@ -78,6 +78,7 @@ It won't be rendered as partial layout
 @section .. @endsection
 @import
 @component .. @endcomponent
+@slot @endslot
 ```
 
 ## dependency
