@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "description": "Simple static site generator, to prevent you write DRY HTML files. ",
   "main": "src/index.js",
+  "bin": {
+    "minissg": "./src/index.js"
+  },
   "scripts": {
     "start": "node index.js",
     "dev" : "node index.js --watch",
