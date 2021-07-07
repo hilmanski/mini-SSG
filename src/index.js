@@ -3,7 +3,7 @@ const fs = require('fs');
 const dir = {
 	page : "./dev/pages",
 	layout : "./dev/_layouts",
-	partial : "./dev/_partials",
+	import : "./dev/_imports",
 	component : "./dev/_components"	,
 }
 
@@ -201,7 +201,7 @@ function getCompleteFileName(text, type) {
 	switch(type) {	
 		case 'import':
 			filename = getTagContent(text)
-			return `${dir.partial}/${filename}.html`
+			return `${dir.import}/${filename}.html`
 		break
 		case 'layout':
 			filename = getTagContent(text)
