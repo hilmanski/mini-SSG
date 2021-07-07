@@ -1,7 +1,7 @@
 Currently on Development
 
 # Mini SSG [Alpha]
-Simple static site generator, to prevent your write DRY HTML files.  
+Simple static site generator, to prevent you write DRY HTML files.  
 Built with Nodejs  
 Inspired by Laravel Blade Template and Sergey.cool SSG
 
@@ -106,8 +106,8 @@ Your production files are in `/public` folder
 - [X] generate assets folder
 - [ ] Better error msg if any typo on syntax / not match
 - [ ] simple website to demo everything
+- [X] Publish as package at npm
 - [ ] npm command to init folder and file as base
-- [ ] Publish as package at npm
 - [X] Live server
 - [X] watch changes
 - [ ] Live Reload

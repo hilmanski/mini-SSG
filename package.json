@@ -1,13 +1,22 @@
 {
-  "name": "minissg",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "name": "mini-ssg",
+  "version": "0.1.0",
+  "description": "Simple static site generator, to prevent you write DRY HTML files. ",
+  "main": "src/index.js",
   "scripts": {
+    "start": "node index.js",
+    "dev" : "node index.js --watch",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
-  "author": "",
+   "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hilmanski/mini-SSG.git"
+  },
+   "bugs": {
+    "url": "https://github.com/hilmanski/mini-SSG/issues"
+  },
+  "keywords": ["ssg"],
+  "author": "Hilman Ramadhan @hilmanski",
   "license": "ISC",
   "dependencies": {
     "chokidar": "^3.5.2",
