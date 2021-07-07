@@ -1,0 +1,21 @@
+@layout(base)
+
+@section(content)
+<main>
+	<h1>I'm slotttt</h1>
+
+
+	<p> Usage Alert component: </p>
+	@component(alert)
+		@slot(plainText)
+			this is text only
+		@endslot
+
+		@slot(complexDiv)
+			<div>
+				<h3>What the heck is whole div</h3>
+			</div>
+		@endslot
+	@endcomponent
+</main>
+@endsection

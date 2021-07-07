@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>@attach(title)</title>
+	<meta name="desc" content="@attach(desc)">
+	<meta property="og:title" content="@attach(title)">
+	<meta property="og:description" content="@attach(desc)">
+
+</head>
+<body>
+	<p>I'm a header</p>
+<nav>
+	<a href="">link</a>
+	<a href="">Other link</a>
+</nav>
+
+	<sidebar>
+		@attach(sidebar)
+	</sidebar>	
+
+	<main>
+		
+<main>
+	<h1>I'm slotttt</h1>
+
+
+	<p> Usage Alert component: </p>
+	@component(alert)
+		@slot(plainText)
+			this is text only
+		@endslot
+
+		@slot(complexDiv)
+			<div>
+				<h3>What the heck is whole div</h3>
+			</div>
+		@endslot
+	@endcomponent
+</main>
+
+	</main>
+
+	<section>
+		<p>You should see code tag below</p>
+		<code>
+			//Test code tag shouldn't be included
+			@attach(sidebar)
+		</code>
+	</section>
+
+	<p>I'm a footer</p>
+<code>
+	code included in footer/partial, what happen..
+	@import(nothing)
+</code>
+		
+</body>
+</html>

@@ -28,6 +28,7 @@ function runFileGenerator(item, fileName) {
 		return runSubFolderGenerator(item)
 	}
 
+	codeTagHolder = [] //always empty for new file
 	const rawContent = readFile(item)
 	const renderedContent = renderPage(rawContent)
 
@@ -52,10 +53,6 @@ function runSubFolderGenerator(item) {
 
 function renderPage(content) {
 	
-	//Mask any code tags
-	codeTagHolder = [] //always empty for new file
-	content = maskCodeTag(content)
-
 	//Render Layout
 	const layoutLabel = content.match(patterns.layout)
 	if(layoutLabel != null) {
@@ -85,28 +82,27 @@ function renderPage(content) {
 
 	//Render Import pages
 	const importLabels = content.match(patterns.import)
-	if(importLabels == null)
-		return content
-	
-	importLabels.forEach(function(match){
-		content = content.replace(patterns.import, renderTag.bind(this, 'import'))
-	})
+	if(importLabels != null) {
+		importLabels.forEach(function(match){
+			content = content.replace(patterns.import, renderTag.bind(this, 'import'))
+		})
+	}
 
 	//Render components
+	//Todo: Test -> what if there is a code in components
 	const componentLabels = content.match(patterns.component)
-	
-
-	//Test -> what if there is a code in components
-
-	content = unMaskCodeTag(content)
-	return content.trim()
+	if(componentLabels != null) {
+		//do something here...
+		//renderComponent(content) 
+	}
+	return unMaskCodeTag(content.trim())
 }
 
 function maskCodeTag(content) {
 	const codeTags = content.match(patterns.codeTag)
 	if(codeTags != null) {
 		codeTags.forEach(function(match){
-			let newHolder = 'nr-' + Math.floor(Math.random() * 99999)
+			let newHolder = 'code-nr-' + Math.floor(Math.random() * 99999)
 			codeTagHolder[newHolder] = match
 			content = content.replace(match, newHolder)
 		})
@@ -116,10 +112,11 @@ function maskCodeTag(content) {
 }
 
 function unMaskCodeTag(content) {
-	if(codeTagHolder != null) 
+	if(codeTagHolder != null)  {
 		for (const [key, value] of Object.entries(codeTagHolder)) {
 		  content = content.replace(key, value)
 		}
+	}
 
 	return content
 }
@@ -162,7 +159,7 @@ function renderLayout(content, text) {
 }
 
 function readFile(filename) {
-	return fs.readFileSync(filename).toString()
+	return maskCodeTag(fs.readFileSync(filename).toString())
 }
 
 function getCompleteFileName(text, type) {
