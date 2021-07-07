@@ -11,6 +11,7 @@ const patterns = {
 	attach: /@attach\((.*?)\)/g,
 	section : /(@section)([\S\s]*?)(@endsection)/gi,
 	simpleSection: /(@section\()(.*?),(.*?)(\))/g,
+	component: /(@component)([\S\s]*?)(@endcomponent)/g,
 }
 
 let codeTagHolder = []
@@ -90,6 +91,12 @@ function renderPage(content) {
 	importLabels.forEach(function(match){
 		content = content.replace(patterns.import, renderTag.bind(this, 'import'))
 	})
+
+	//Render components
+	const componentLabels = content.match(patterns.component)
+	
+
+	//Test -> what if there is a code in components
 
 	content = unMaskCodeTag(content)
 	return content.trim()
