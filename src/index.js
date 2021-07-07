@@ -9,8 +9,8 @@ const patterns = {
 	import: /@import\((.*?)\)/g,
 	layout: /@layout\((.*?)\)/g,
 	attach: /@attach\((.*?)\)/g,
-	part : /(@part)([\S\s]*?)(@endpart)/gi,
-	simplePart: /(@part\()(.*?),(.*?)(\))/g,
+	section : /(@section)([\S\s]*?)(@endsection)/gi,
+	simpleSection: /(@section\()(.*?),(.*?)(\))/g,
 }
 
 let codeTagHolder = []
@@ -62,24 +62,24 @@ function renderPage(content) {
 	}
 	content = maskCodeTag(content)
 
-	//Render simple part
-	const simplePartLabels = content.match(patterns.simplePart)
-	if(simplePartLabels != null) {
-		simplePartLabels.forEach(function(match){
-			content = content.replace(patterns.attach, renderSimplePart.bind(this, content))
+	//Render simple section
+	const simpleSectionLabels = content.match(patterns.simpleSection)
+	if(simpleSectionLabels != null) {
+		simpleSectionLabels.forEach(function(match){
+			content = content.replace(patterns.attach, renderSimpleSection.bind(this, content))
 		})
 
-		content = content.replace(patterns.simplePart, '')
+		content = content.replace(patterns.simpleSection, '')
 	}
 
-	//Render complex part / swap attach & part
+	//Render complex section / swap attach & section
 	const attachLabels = content.match(patterns.attach)
 	if(attachLabels != null) {
 		attachLabels.forEach(function(match){
 			content = content.replace(patterns.attach, renderLayout.bind(this, content))
 		})
 
-		content = content.replace(patterns.part, '')
+		content = content.replace(patterns.section, '')
 	}
 
 	//Render Import pages
@@ -123,35 +123,35 @@ function renderTag(type, text) {
 	return content
 }
 
-function renderSimplePart(content, text) {
+function renderSimpleSection(content, text) {
 	const attachName = getTagContent(text.split(',')[0])
 	
-	const patternBetweenPart = /(?<=@part\()(.*),(.*)(?=\))/g
-	const matchPart = content.match(patternBetweenPart).filter(
+	const patternBetweenSection = /(?<=@section\()(.*),(.*)(?=\))/g
+	const matchSection = content.match(patternBetweenSection).filter(
 							item => item.startsWith(attachName) 
 						)[0]
 	
-	//Since attach can include both simple & not simple part
+	//Since attach can include both simple & not simple Section
 		//we need to make an exception
-	if(matchPart == undefined)
+	if(matchSection == undefined)
 		return text
 
-	const value = matchPart.split(',')[1].trim()
+	const value = matchSection.split(',')[1].trim()
 	return value
 }
 
 function renderLayout(content, text) {
 	const attachName = getTagContent(text) 
-	const patternBetweenPart = /(?<=@part)([\S\s]*?)(?=@endpart)/g
+	const patternBetweenSection = /(?<=@section)([\S\s]*?)(?=@endsection)/g
 
-	const matchPart = content.match(patternBetweenPart).filter(
+	const matchSection = content.match(patternBetweenSection).filter(
 						item => item.startsWith("(" + attachName) 
 					)[0]
 
-	if(matchPart == undefined) return text;
+	if(matchSection == undefined) return text;
 
-	const partContent = matchPart.replace(`(${attachName})`,'')
-	return partContent
+	const sectionContent = matchSection.replace(`(${attachName})`,'')
+	return sectionContent
 }
 
 function readFile(filename) {

@@ -1,15 +1,15 @@
 @layout(base)
 
-@part(title, About Page Title)
-@part(desc, Deskripsi from About page)
+@section(title, About Page Title)
+@section(desc, Deskripsi from About page)
 
 
-@part(sidebar)
+@section(sidebar)
 	<h1>this is sidebar part</h1>
 	<p>hey im sidebar</p>
-@endpart
+@endsection
 
-@part(content)
+@section(content)
 	<h1>main content of about page</h1>
 	<p>this is about page</p>
 	there is a code here code 1
@@ -21,8 +21,8 @@
 	there is a code here again (code 2)
 	current problem if ")" exixsts, check which code poteltially problematic
 	<code>
-		@part(title, About Page Title)
+		@section(title, About Page Title)
 		test part
-		@endpart
+		@endsection
 	</code>
-@endpart
+@endsection

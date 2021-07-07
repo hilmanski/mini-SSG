@@ -19,7 +19,7 @@ Attach code on layout with part
 1a. Simple part (for text only) 
 ```
 //On page
-@part(title, this is title)
+@section(title, this is title)
 
 //On layout
 @attach(title)
@@ -28,9 +28,9 @@ Attach code on layout with part
 1b. Complex part (For html element)
 ```
 //On page
-@part(content)
+@section(content)
 	<div> this is content </div>
-@endpart
+@endsection
 
 //On Layout
 @attach(content)
@@ -42,6 +42,8 @@ Attach code on layout with part
 ```
 
 4. Import can contains other import
+
+5. Work on 1Lvl subfolder too
 
 ## Examples
 
@@ -60,6 +62,7 @@ To use in HTML files
 <p>this is index page</p>
 @import(footer)
 ```
+others coming soon...
 
 ## Caveat
 If you write any of "mini-ssg" syntax above, put it on code tag
@@ -68,6 +71,15 @@ If you write any of "mini-ssg" syntax above, put it on code tag
 ```
 It won't be rendered as partial layout
 
+**Reserved Syntax**
+```
+@layout
+@attach
+@section .. @endsection
+@import
+@component .. @endcomponent
+```
+
 ## Usage
 Write your HTML files in `/dev/pages`  
 Use "import feature" above where you can reuse code in `dev/_partials`  
@@ -75,11 +87,11 @@ Run `node src/index.js`
 Your production files are in `/public` folder
 
 ## Todo / Alpha Plan
-- [X] partial
+- [X] partial / import
 - [X] Prevent string "@import()"  rendered as code.	
 - [X] template (layout)
 - [X] simple attach/part with 2nd parameter as value
-- [ ] slots
+- [ ] slots -> inject text or div in component
 - [ ] work with markdown?
 - [X] work with subfolders
 - [ ] Better error msg if any typo on syntax / not match
