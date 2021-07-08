@@ -95,26 +95,4 @@ Use "import feature" above where you can reuse code in `dev/_partials`
 Run `node src/index.js`  
 Your production files are in `/public` folder
 
-## Todo / Alpha Plan
-- [X] partial / import
-- [X] Prevent string "@import()"  rendered as code.	
-- [X] template (layout)
-- [X] simple attach/section with 2nd parameter as value
-- [X] slots -> inject text or div in component
-- [ ] work with markdown (not sure if this needed)
-- [X] work with subfolders
-- [X] generate assets folder
-- [ ] Better error msg if any typo on syntax / not match
-- [ ] simple website to demo everything
-- [X] Publish as package at npm
-- [X] @attach(1, defaultValue) //if not included
-- [ ] npm command to init folder and file as base
-- [X] Live server
-- [X] watch changes
-- [ ] Live Reload
-- [ ] Only 'related change' need to re-render (idea: create meta-temp-folder)
-- [ ] SASS/SCSS support
-- [ ] Automate test
-- [X] Minify everything (CSS, JS, HTML)
-
 

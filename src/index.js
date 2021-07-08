@@ -9,6 +9,7 @@ const dir = {
 	layout : "./dev/_layouts",
 	import : "./dev/_imports",
 	component : "./dev/_components",
+	public : "./public"
 }
 
 const patterns = {
@@ -29,7 +30,8 @@ let codeTagHolder = []
 
 //static sites
 const pages = fs.readdirSync(dir.static)
-createFolderIfNone('./public/')
+removeDir(dir.public)
+createFolderIfNone(dir.public)
 pages.forEach(function(page) {
 	generateFile(`${dir.static}/${page}`, page)
 })
@@ -48,6 +50,13 @@ function generateFile(item, fileName) {
 	const ext = path.extname(fileName);
 	if(ext == ".html") {
 		content = renderPage(content)
+		const folder = fileName.split('.')[0] //get name with subfolder
+		
+		//except index, no folder.
+		if(folder != 'index') {
+			createFolderIfNone('./public/'+folder)
+			fileName = folder + '/index.html'
+		}
 	}
 
 	//save to new Dir
@@ -256,6 +265,28 @@ function createFolderIfNone(dirName) {
 	    fs.mkdirSync(dirName);
 	
 	return
+}
+
+//remove whole dir helper
+function removeDir (path) {
+  if (fs.existsSync(path)) {
+    const files = fs.readdirSync(path)
+
+    if (files.length > 0) {
+      files.forEach(function(filename) {
+        if (fs.statSync(path + "/" + filename).isDirectory()) {
+          removeDir(path + "/" + filename)
+        } else {
+          fs.unlinkSync(path + "/" + filename)
+        }
+      })
+      fs.rmdirSync(path)
+    } else {
+      fs.rmdirSync(path)
+    }
+  } else {
+    console.log("Directory path not found.")
+  }
 }
 
 } //end runSSG
