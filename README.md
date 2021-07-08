@@ -86,7 +86,6 @@ It won't be rendered as partial layout
 chokidar
 finalhandler
 serve-static
-string-minify
 ```
 
 ## Usage

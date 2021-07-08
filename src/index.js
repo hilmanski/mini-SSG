@@ -2,7 +2,6 @@
 
 const fs = require('fs');
 const path = require('path');
-const minifier = require('string-minify');
 
 const dir = {
 	static : "./dev/pages",
@@ -60,7 +59,7 @@ function generateFile(item, fileName) {
 	}
 
 	//save to new Dir
-	fs.writeFileSync(`./public/${fileName}`, minifier(content))
+	fs.writeFileSync(`./public/${fileName}`, content)
 	return
 }
 
