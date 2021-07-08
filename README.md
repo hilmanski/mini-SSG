@@ -107,6 +107,7 @@ Your production files are in `/public` folder
 - [ ] Better error msg if any typo on syntax / not match
 - [ ] simple website to demo everything
 - [X] Publish as package at npm
+- [X] @attach(1, defaultValue) //if not included
 - [ ] npm command to init folder and file as base
 - [X] Live server
 - [X] watch changes

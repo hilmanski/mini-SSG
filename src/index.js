@@ -77,6 +77,10 @@ function renderPage(content) {
 	}
 	content = maskCodeTag(content)
 
+	//Render attach section
+	//@attach(nilai, defaultValue)
+	//TODO HERE
+
 	//Render simple section
 	const simpleSectionLabels = content.match(patterns.simpleSection)
 	if(simpleSectionLabels != null) {
@@ -170,7 +174,16 @@ function renderLayout(content, text) {
 						item => item.startsWith("(" + attachName) 
 					)[0]
 
-	if(matchSection == undefined) return text;
+	if(matchSection == undefined) {
+
+		if(attachName.includes(",")) {
+			//attach has default value
+			const defaultVal = attachName.split(",")
+			defaultVal.shift()
+			return defaultVal.toString().trim()
+		}
+		return text;
+	}
 
 	const sectionContent = matchSection.replace(`(${attachName})`,'')
 	return sectionContent
@@ -258,11 +271,6 @@ if(isWatching) {
 	const http = require('http')
 	const serveStatic = require('serve-static')
 
-	chokidar.watch('./dev').on('all', (event, path) => {
-	  runSSG()
-	  console.log('file updated.. reload ur browser..')
-	});
-
 	//Server
 	var serve = serveStatic('./public', { 'index': ['index.html', 'index.htm'] })
 	 
@@ -270,6 +278,12 @@ if(isWatching) {
 	var server = http.createServer(function onRequest (req, res) {
 	  serve(req, res, finalhandler(req, res))
 	})
+
+	console.log('running http://localhost:3000')
+	chokidar.watch('./dev').on('all', (event, path) => {
+	  runSSG()
+	  console.log('file updated.. reload ur browser..')
+	});
 	 
 	// Listen
 	server.listen(3000)
