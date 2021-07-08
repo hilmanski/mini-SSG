@@ -1,0 +1,43 @@
+@layout(base)
+
+@section(thumbnail, https://thisisthumbnail.png)
+
+@section(content)
+<div>
+
+	<p>Below is pure code</p>		
+	<pre><code class="language-html">
+				//To import page
+				@import(header)		
+				<p>Your awesome content</p>
+				@import(footer)
+			</code></pre>
+	<p>Above is pure code</p>		
+
+	<h1>I'm slotttt</h1>
+
+	<p>Lets try simple component, where no named slot needed</p>
+	@component(simple)
+		<span>
+			I'm a simple component with no slot named
+		</span>
+	@endcomponent
+
+	<hr>
+	<p> Usage Alert component: </p>
+	@component(alert)
+		@slot(plainText)
+			this is text only
+			what if i have (alert) here too
+			shouldnt be a problem
+		@endslot
+
+		@slot(complexDiv)
+			<div>
+				<h3>What the heck is whole div</h3>
+			</div>
+		@endslot
+	@endcomponent
+</div>
+
+@endsection
