@@ -8,17 +8,19 @@
   },
   "scripts": {
     "start": "node src/index.js",
-    "dev" : "node src/index.js --watch",
+    "dev": "node src/index.js --watch",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-   "repository": {
+  "repository": {
     "type": "git",
     "url": "git+https://github.com/hilmanski/mini-SSG.git"
   },
-   "bugs": {
+  "bugs": {
     "url": "https://github.com/hilmanski/mini-SSG/issues"
   },
-  "keywords": ["ssg"],
+  "keywords": [
+    "ssg"
+  ],
   "author": "Hilman Ramadhan @hilmanski",
   "license": "ISC",
   "dependencies": {

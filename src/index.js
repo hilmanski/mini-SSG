@@ -253,8 +253,6 @@ runSSG() //autoRun 1st time
 //=================================
 const isWatching = process.argv.includes('--watch');
 if(isWatching) {
-	console.log('Your site is on http://localhost:3000')
-
 	const chokidar = require('chokidar');
 	const finalhandler = require('finalhandler')
 	const http = require('http')
@@ -262,6 +260,7 @@ if(isWatching) {
 
 	chokidar.watch('./dev').on('all', (event, path) => {
 	  runSSG()
+	  console.log('file updated.. reload ur browser..')
 	});
 
 	//Server
