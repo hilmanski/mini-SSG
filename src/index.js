@@ -13,7 +13,7 @@ const dir = {
 }
 
 const patterns = {
-	codeTag: /(<code>(?:[^<](?!\/code))*<\/code>)/g,
+	codeTag: /(<code([\S\s]*?)>([\S\s]*?)<\/code>)/g,
 	import: /@import\((.*?)\)/g,
 	layout: /@layout\((.*?)\)/g,
 	attach: /@attach\((.*?)\)/g,
@@ -85,10 +85,6 @@ function renderPage(content) {
 		content = content.replace(patterns.layout, renderTag.bind(this, 'layout'))
 	}
 	content = maskCodeTag(content)
-
-	//Render attach section
-	//@attach(nilai, defaultValue)
-	//TODO HERE
 
 	//Render simple section
 	const simpleSectionLabels = content.match(patterns.simpleSection)
