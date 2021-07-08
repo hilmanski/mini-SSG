@@ -4,4 +4,4 @@ Built with Nodejs
 Inspired by Laravel Blade Template and Sergey.cool SSG
 
 ## Why and How
-Check out (mini SSG website)[https://minissg.render.com/]
+Check out (mini SSG website)[https://minissg.onrender.com/]
