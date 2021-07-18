@@ -37,7 +37,7 @@ pages.forEach(function(page) {
 })
 
 //Static folder
-fs.copy(dir.static, './public/static')
+fs.copy(dir.static, './public/')
 	.then(() => console.log('success!'))
 	.catch(err => err)
 
