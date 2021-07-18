@@ -1,10 +1,11 @@
 #!/usr/bin/env node
 
-const fs = require('fs');
+const fs = require('fs-extra')
 const path = require('path');
 
 const dir = {
-	static : "./dev/pages",
+	static: "./dev/static",
+	pages : "./dev/pages",
 	layout : "./dev/_layouts",
 	import : "./dev/_imports",
 	component : "./dev/_components",
@@ -27,13 +28,19 @@ function runSSG() {
 
 let codeTagHolder = []
 
-//static sites
-const pages = fs.readdirSync(dir.static)
+//Pages file
+const pages = fs.readdirSync(dir.pages)
 removeDir(dir.public)
 createFolderIfNone(dir.public)
 pages.forEach(function(page) {
-	generateFile(`${dir.static}/${page}`, page)
+	generateFile(`${dir.pages}/${page}`, page)
 })
+
+//Static folder
+fs.copy(dir.static, './public/static')
+	.then(() => console.log('success!'))
+	.catch(err => err)
+
 
 function generateFile(item, fileName) {	
 	//check if DIR
@@ -70,7 +77,7 @@ function generatePageSubFolder(item) {
 	createFolderIfNone(`./public/${subFolder}`)
 
 	subPages.forEach(function(page) {
-		generateFile(`${dir.static}/${subFolder}/${page}`, `${subFolder}/${page}`)
+		generateFile(`${dir.pages}/${subFolder}/${page}`, `${subFolder}/${page}`)
 	})
 
 	return

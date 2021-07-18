@@ -1,7 +1,10 @@
-# Mini SSG [Alpha]
+# Mini SSG
 Simple static site generator, to prevent you write DRY HTML files with minimal syntax  
 Built with Nodejs  
 Inspired by Laravel Blade Template and Sergey.cool SSG
+
+**Update:**
+v 0.1.9: All static assets live in "dev/static".
 
 ## Use Case
 For someone who works with a lot of html files and many reuse components (header, footer, etc.) or want to use general layout
@@ -98,4 +101,6 @@ If attach need a default value as fallback
 <title>@attach(title, My default title)</title>
 ```
 
-That't it learn more at [mini SSG website](https://minissg.vercel.app/tour)
+All static assets or files like CSS, javascript, image and stuff can live in "static" folder  
+
+That's it! learn more at [mini SSG website](https://minissg.vercel.app/tour)
