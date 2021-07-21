@@ -29,7 +29,7 @@ Use general layout
 
 @section(title, Your Page Title)
 
-@section
+@section(main)
 <main>
 	Hey.. meet your awesome content
 </main>
@@ -45,7 +45,7 @@ How layout looks like
 	<title>@attach(title)</title> <!-- render your title above -->
 </head>
 <body>
-	@attach(section) <!-- render everything from section above -->
+	@attach(main) <!-- render everything from section above -->
 </body>
 </html>
 ```
@@ -60,7 +60,7 @@ Layout can include multiple imports
 </head>
 <body>
 	@import(header)
-	@attach(section) <!-- render everything from section above -->
+	@attach(main) <!-- render everything from section above -->
 	@import(footer)
 </body>
 </html>
