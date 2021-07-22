@@ -172,8 +172,8 @@ function renderSimpleSection(content, text) {
 		//we need to make an exception
 	if(matchSection == undefined)
 		return text
-
-	const value = matchSection.split(',')[1].trim()
+	
+	const value = removeKeyName(matchSection)
 	return value
 }
 
@@ -189,9 +189,7 @@ function renderLayout(content, text) {
 
 		if(attachName.includes(",")) {
 			//attach has default value
-			const defaultVal = attachName.split(",")
-			defaultVal.shift()
-			return defaultVal.toString().trim()
+			return removeKeyName(attachName)
 		}
 		return text;
 	}
@@ -267,6 +265,12 @@ function createFolderIfNone(dirName) {
 	    fs.mkdirSync(dirName);
 	
 	return
+}
+
+function removeKeyName(text) {
+	const arrayOfText = text.split(",")
+	arrayOfText.shift()
+	return arrayOfText.toString().trim()
 }
 
 //remove whole dir helper
