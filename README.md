@@ -3,7 +3,8 @@ Simple static site generator, to prevent you write DRY HTML files with minimal s
 Built with Nodejs  
 Inspired by Laravel Blade Template and Sergey.cool SSG
 
-**Update/Log**
+**Update/Log**  
+v 0.2.2: Add livereload, running npm run dev, will auto reload browser when changes occured  
 v 0.2.1: Bug fixes: section value include "comma sign" allowed  
 v 0.1.9: All static assets live in "dev/static".
 

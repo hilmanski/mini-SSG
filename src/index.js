@@ -303,25 +303,19 @@ runSSG() //autoRun 1st time
 //=================================
 const isWatching = process.argv.includes('--watch');
 if(isWatching) {
+	const liveServer = require("live-server");
 	const chokidar = require('chokidar');
-	const finalhandler = require('finalhandler')
-	const http = require('http')
-	const serveStatic = require('serve-static')
 
-	//Server
-	var serve = serveStatic('./public', { 'index': ['index.html', 'index.htm'] })
-	 
-	// Create server
-	var server = http.createServer(function onRequest (req, res) {
-	  serve(req, res, finalhandler(req, res))
-	})
-
-	console.log('running http://localhost:3000')
+	var params = {
+		watch: "./public",
+		root: "./public",
+		file: "index.html",
+		wait: 1000,
+		logLevel: 0,
+	};
+	liveServer.start(params);
+	
 	chokidar.watch('./dev').on('all', (event, path) => {
 	  runSSG()
-	  console.log('file updated.. reload ur browser..')
 	});
-	 
-	// Listen
-	server.listen(3000)
 }
