@@ -30,7 +30,7 @@ let codeTagHolder = []
 
 //Pages file
 const pages = fs.readdirSync(dir.pages)
-removeDir(dir.public)
+fs.emptyDirSync(dir.public)
 createFolderIfNone(dir.public)
 pages.forEach(function(page) {
 	generateFile(`${dir.pages}/${page}`, page)
@@ -271,28 +271,6 @@ function removeKeyName(text) {
 	const arrayOfText = text.split(",")
 	arrayOfText.shift()
 	return arrayOfText.toString().trim()
-}
-
-//remove whole dir helper
-function removeDir (path) {
-  if (fs.existsSync(path)) {
-    const files = fs.readdirSync(path)
-
-    if (files.length > 0) {
-      files.forEach(function(filename) {
-        if (fs.statSync(path + "/" + filename).isDirectory()) {
-          removeDir(path + "/" + filename)
-        } else {
-          fs.unlinkSync(path + "/" + filename)
-        }
-      })
-      fs.rmdirSync(path)
-    } else {
-      fs.rmdirSync(path)
-    }
-  } else {
-    console.log("Directory path not found.")
-  }
 }
 
 } //end runSSG
