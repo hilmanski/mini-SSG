@@ -61,6 +61,10 @@ function generateFile(item, fileName) {
 		//except index, no folder.
 		if(folder != 'index') {
 			createFolderIfNone('./public/'+folder)
+
+			// Don't create index.html (optional)
+			// fileName = folder + '.html'
+			
 			fileName = folder + '/index.html'
 		}
 	}
@@ -232,7 +236,12 @@ function readFileRaw(filename) {
 }
 
 function readFile(filename) {
-	return maskCodeTag(fs.readFileSync(filename).toString())
+	// If file is not exist, return warning
+	if (fs.existsSync(filename)) {
+		return maskCodeTag(fs.readFileSync(filename).toString())
+	} else {
+		console.log(`${filename} not found`)
+	}
 }
 
 function getCompleteFileName(text, type) {
