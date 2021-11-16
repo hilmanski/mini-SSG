@@ -30,7 +30,10 @@ let codeTagHolder = []
 
 //Pages file
 const pages = fs.readdirSync(dir.pages)
-fs.emptyDirSync(dir.public)
+// fs.emptyDirSync(dir.public)
+if (!process.argv.includes('--watch')) {
+	fs.emptyDirSync(dir.public)
+}
 createFolderIfNone(dir.public)
 pages.forEach(function(page) {
 	generateFile(`${dir.pages}/${page}`, page)
