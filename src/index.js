@@ -1,16 +1,18 @@
 #!/usr/bin/env node
 
-const fs     = require('fs-extra');
-const path   = require('path');
+const fs = require('fs-extra');
+const path = require('path');
 const config = require('config');
 
 const dir = {
-	dev : config.get( 'dir.dev' ),
-	static: config.get( 'dir.static' ),
-	pages : config.get( 'dir.pages' ),
-	layout : config.get( 'dir.layout' ),
-	import : config.get( 'dir.import' ),
-	component : config.get( 'dir.component' ),
+	dev: {
+		root : config.get( 'dir.dev.root' ),
+		static : config.get( 'dir.dev.root' ) + config.get( 'dir.dev.static' ),
+		pages : config.get( 'dir.dev.root' ) + config.get( 'dir.dev.pages' ),
+		layout : config.get( 'dir.dev.root' ) + config.get( 'dir.dev.layout' ),
+		import : config.get( 'dir.dev.root' ) + config.get( 'dir.dev.import' ),
+		component : config.get( 'dir.dev.root' ) + config.get( 'dir.dev.component' ),
+	},
 	public : config.get( 'dir.public' ),
 }
 
@@ -31,15 +33,15 @@ function runSSG() {
 	let codeTagHolder = []
 
 	//Pages file
-	const pages = fs.readdirSync(dir.pages)
+	const pages = fs.readdirSync(dir.dev.pages)
 	fs.emptyDirSync(dir.public)
 	createFolderIfNone(dir.public)
 	pages.forEach(function(page) {
-		generateFile(`${dir.pages}/${page}`, page)
+		generateFile(`${dir.dev.pages}/${page}`, page)
 	})
 
 	//Static folder
-	fs.copy(dir.static, `./${dir.public}/`)
+	fs.copy(dir.dev.static, `./${dir.public}/`)
 		.then(() => console.log('success!'))
 		.catch(err => err)
 
@@ -73,13 +75,13 @@ function runSSG() {
 	}
 
 	function generatePageSubFolder(item) {
-		let subFolder = item.replace(`./${dir.dev}/pages/`, '')
+		let subFolder = item.replace(`${dir.dev.pages}/`, '')
 
 		const subPages = fs.readdirSync(item)
 		createFolderIfNone(`./${dir.public}/${subFolder}`)
 
 		subPages.forEach(function(page) {
-			generateFile(`${dir.pages}/${subFolder}/${page}`, `${subFolder}/${page}`)
+			generateFile(`${dir.dev.pages}/${subFolder}/${page}`, `${subFolder}/${page}`)
 		})
 
 		return
@@ -242,15 +244,15 @@ function runSSG() {
 		switch(type) {	
 			case 'import':
 				filename = getTagContent(text)
-				return `${dir.import}/${filename}.html`
+				return `${dir.dev.import}/${filename}.html`
 			break
 			case 'layout':
 				filename = getTagContent(text)
-				return `${dir.layout}/${filename}.html`
+				return `${dir.dev.layout}/${filename}.html`
 			break
 			case 'component':
 				filename = text
-				return `${dir.component}/${filename}.html`
+				return `${dir.dev.component}/${filename}.html`
 			break
 			default:
 				console.log('No type file matched.')
@@ -295,7 +297,7 @@ if(isWatching) {
 	};
 	liveServer.start(params);
 	
-	chokidar.watch(`./${dir.dev}`).on('all', (event, path) => {
+	chokidar.watch(dir.dev.root).on('all', (event, path) => {
 	  runSSG()
 	});
 }
