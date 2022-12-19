@@ -7,11 +7,11 @@ const config = require('config');
 const dir = {
 	dev: {
 		root : config.get( 'dir.dev.root' ),
-		static : config.get( 'dir.dev.root' ) + config.get( 'dir.dev.static' ),
-		pages : config.get( 'dir.dev.root' ) + config.get( 'dir.dev.pages' ),
-		layout : config.get( 'dir.dev.root' ) + config.get( 'dir.dev.layout' ),
-		import : config.get( 'dir.dev.root' ) + config.get( 'dir.dev.import' ),
-		component : config.get( 'dir.dev.root' ) + config.get( 'dir.dev.component' ),
+		static : config.get( 'dir.dev.static' ),
+		pages : config.get( 'dir.dev.pages' ),
+		layout : config.get( 'dir.dev.layout' ),
+		import : config.get( 'dir.dev.import' ),
+		component : config.get( 'dir.dev.component' ),
 	},
 	public : config.get( 'dir.public' ),
 }
