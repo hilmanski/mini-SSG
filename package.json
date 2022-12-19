@@ -26,6 +26,7 @@
   "license": "ISC",
   "dependencies": {
     "chokidar": "^3.5.2",
+    "config": "^3.3.8",
     "fs-extra": "^10.0.0",
     "live-server": "^1.2.1"
   }
