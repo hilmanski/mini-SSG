@@ -5,6 +5,7 @@ const path   = require('path');
 const config = require('config');
 
 const dir = {
+	dev : config.get( 'dir.dev' ),
 	static: config.get( 'dir.static' ),
 	pages : config.get( 'dir.pages' ),
 	layout : config.get( 'dir.layout' ),
@@ -72,7 +73,7 @@ function runSSG() {
 	}
 
 	function generatePageSubFolder(item) {
-		let subFolder = item.replace('./dev/pages/', '')
+		let subFolder = item.replace(`./${dir.dev}/pages/`, '')
 
 		const subPages = fs.readdirSync(item)
 		createFolderIfNone(`./${dir.public}/${subFolder}`)
@@ -294,7 +295,7 @@ if(isWatching) {
 	};
 	liveServer.start(params);
 	
-	chokidar.watch('./dev').on('all', (event, path) => {
+	chokidar.watch(`./${dir.dev}`).on('all', (event, path) => {
 	  runSSG()
 	});
 }
