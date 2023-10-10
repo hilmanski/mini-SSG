@@ -1,3 +1,9 @@
+# Status
+Currently, there's no plan to updating this project in the near future. 
+
+Take a look other similar project:
+- [Static by DevDojo](https://github.com/thedevdojo/static)
+
 # Mini SSG
 Simple static site generator, to prevent you write DRY HTML files with minimal syntax  
 Built with Nodejs  
