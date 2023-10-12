@@ -181,9 +181,12 @@ function renderLayout(content, text) {
 	const attachName = getTagContent(text) 
 	const patternBetweenSection = /(?<=@section)([\S\s]*?)(?=@endsection)/g
 
-	const matchSection = content.match(patternBetweenSection).filter(
+	let matchSection
+	if (content.match(patternBetweenSection)) {
+		matchSection = content.match(patternBetweenSection).filter(
 						item => item.startsWith("(" + attachName) 
-					)[0]
+					)[0]	
+	}
 
 	if(matchSection == undefined) {
 
@@ -222,7 +225,10 @@ function renderSlot(rawComp, rawAttach) {
 							item => item.startsWith("(" + attachName) 
 						)[0]
 	}
-	const slotContent = matchSlot.replace(`(${attachName})`,'')
+	let slotContent
+	if (matchSlot) {
+		slotContent = matchSlot.replace(`(${attachName})`,'')
+	}
 
 	return slotContent
 }
