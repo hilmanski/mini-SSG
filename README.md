@@ -18,7 +18,7 @@ v 0.1.9: All static assets live in "dev/static".
 For someone who works with a lot of html files and many reuse components (header, footer, etc.) or want to use general layout
 
 ## Why and How to use it
-Check out [mini SSG website](https://minissg.vercel.app)
+Check out [mini SSG website](https://minissg.up.railway.app/)
 
 ## Syntax preview
 
@@ -111,4 +111,4 @@ If attach need a default value as fallback
 
 All static assets or files like CSS, javascript, image and stuff can live in "static" folder  
 
-That's it! learn more at [mini SSG website](https://minissg.vercel.app/tour)
+That's it! learn more at [mini SSG website](https://minissg.up.railway.app/tour)
