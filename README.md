@@ -18,7 +18,7 @@ v 0.1.9: All static assets live in "dev/static".
 For someone who works with a lot of html files and many reuse components (header, footer, etc.) or want to use general layout
 
 ## Why and How to use it
-Check out [mini SSG website](https://minissg.up.railway.app/)
+Check out [mini SSG website](https://mini-ssg-website.pages.dev/)
 
 ## Syntax preview
 
